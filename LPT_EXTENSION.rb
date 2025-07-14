@@ -1,5 +1,22 @@
 require 'sketchup.rb'
+require 'fileutils'
 PLUGIN_DIR = File.dirname(__FILE__) # Đặt ở đầu file
+
+# Thực hiện cập nhật nếu có flag
+flag_file = File.join(PLUGIN_DIR, "update.flag")
+temp_file = File.join(PLUGIN_DIR, "temp", "LPT_EXTENSION_new.rb")
+main_file = File.join(PLUGIN_DIR, "LPT_EXTENSION.rb")
+
+if File.exist?(flag_file) && File.exist?(temp_file)
+  begin
+    FileUtils.cp(temp_file, main_file)
+    File.delete(flag_file)
+    File.delete(temp_file)
+    puts "[LPT_SOLUTION] Đã cập nhật plugin thành công."
+  rescue => e
+    puts "[LPT_SOLUTION] Lỗi khi cập nhật: #{e.message}"
+  end
+end
 
 module LPT_SOLUTION
   module LPT_EXTENSION
