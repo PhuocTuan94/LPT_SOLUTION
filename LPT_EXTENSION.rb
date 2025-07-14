@@ -8,53 +8,39 @@ module LPT_SOLUTION
             require 'open-uri'
             require 'json'
 
-            VERSION = "1.2.4"
+            VERSION = "2.1.1"
             VERSION_URL = "https://phuoctuan94.github.io/LPT_SOLUTION/version.json"
                 def self.check_for_update_silent
-          begin
-            json = URI.open(VERSION_URL).read
-            data = JSON.parse(json)
-            latest = data["version"]
+  begin
+    json = URI.open(VERSION_URL).read
+    data = JSON.parse(json)
+    latest = data["version"]
 
-            if latest > VERSION
-              temp_dir = File.join(PLUGIN_DIR, "temp")
-              Dir.mkdir(temp_dir) unless Dir.exist?(temp_dir)
+    if latest > VERSION
+      temp_dir = File.join(PLUGIN_DIR, "temp")
+      Dir.mkdir(temp_dir) unless Dir.exist?(temp_dir)
 
-              new_file_url = data["main_rb_url"]
-              temp_file_path = File.join(temp_dir, "LPT_EXTENSION_new.rb")
-              URI.open(new_file_url) do |remote|
-                File.open(temp_file_path, "wb") do |file|
-                  file.write(remote.read)
-                end
-              end
-
-              # Đánh dấu cần cập nhật ở lần khởi động tiếp theo
-              flag_file = File.join(PLUGIN_DIR, "update.flag")
-              File.write(flag_file, "update_pending")
-
-            end
-          rescue => e
-            puts "[LPT_SOLUTION] Không kiểm tra được cập nhật: #{e.message}"
-          end
+      new_file_url = data["main_rb_url"]
+      temp_file_path = File.join(temp_dir, "LPT_EXTENSION_new.rb")
+      URI.open(new_file_url) do |remote|
+        File.open(temp_file_path, "wb") do |file|
+          file.write(remote.read)
         end
-        
-  UI.messagebox("Bản mới 1.2.4 đã cập nhật chức năng XYZ"<br>"Tắt mở lại")
-        
-        
-                                  flag_file = File.join(PLUGIN_DIR, "update.flag")
-                          temp_file = File.join(PLUGIN_DIR, "temp", "LPT_EXTENSION_new.rb")
-                          main_file = File.join(PLUGIN_DIR, "LPT_EXTENSION.rb")
+      end
 
-                          if File.exist?(flag_file) && File.exist?(temp_file)
-                            begin
-                              FileUtils.cp(temp_file, main_file)
-                              File.delete(flag_file)
-                              File.delete(temp_file)
-                              puts "[LPT_SOLUTION] Đã cập nhật plugin thành công."
-                            rescue => e
-                              puts "[LPT_SOLUTION] Lỗi khi cập nhật: #{e.message}"
-                            end
-                          end
+      flag_file = File.join(PLUGIN_DIR, "update.flag")
+      File.write(flag_file, "update_pending")
+
+      # ✅ Thông báo cập nhật (an toàn, không lỗi cú pháp)
+      UI.messagebox("Bản cập nhật mới #{latest} đã có!\n" \
+                    "Tính năng mới: XYZ\n" \
+                    "Vui lòng tắt và mở lại SketchUp để sử dụng.")
+    end
+  rescue => e
+    puts "[LPT_SOLUTION] Không kiểm tra được cập nhật: #{e.message}"
+  end
+end
+
 
 #CHECK VERSION#
 
