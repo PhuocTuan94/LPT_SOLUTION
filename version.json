@@ -1,5 +1,2 @@
-{
-  "version": "1.1.0",
-  "changelog": "• Testing Update [BETA]",
-  "download_url": "https://phuoctuan94.github.io/LPT_SOLUTION/LPT_SOLUTION_v1.1.0.rbz"
-}
+"version": "1.0.1",
+  "main_rb_url": "https://raw.githubusercontent.com/phuoctuan94/LPT_SOLUTION/main/LPT_EXTENSION.rb"
