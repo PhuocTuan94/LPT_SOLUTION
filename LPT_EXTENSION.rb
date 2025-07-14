@@ -5,6 +5,11 @@ module LPT_SOLUTION
   module LPT_EXTENSION
 
 #CHECK VERSION#
+            require 'open-uri'
+            require 'json'
+
+            VERSION = "1.2.4"
+            VERSION_URL = "https://phuoctuan94.github.io/LPT_SOLUTION/version.json"
                 def self.check_for_update_silent
           begin
             json = URI.open(VERSION_URL).read
@@ -32,6 +37,8 @@ module LPT_SOLUTION
             puts "[LPT_SOLUTION] Không kiểm tra được cập nhật: #{e.message}"
           end
         end
+        
+  UI.messagebox("Bản mới 1.2.4 đã cập nhật chức năng XYZ"<br>"Tắt mở lại")
         
         
                                   flag_file = File.join(PLUGIN_DIR, "update.flag")
@@ -302,7 +309,7 @@ JAVASCRIPT
     # ✅ Tạo menu duy nhất 1 lần
     unless file_loaded?(__FILE__)
       self.create_template_file
-      self.check_for_update
+      self.check_for_update_silent
                 
                     # --- Menu ---
                     menu = UI.menu('Plugins').add_submenu('LPT_SOLUTION') 
