@@ -48,20 +48,19 @@ end
 # Hàm thực hiện cập nhật
 def self.update_extension(github_raw_url_base)
   extension_files = [
-    "LPT_SOLUTION.rb", # Tên file chính của extension
-    "LPT_SOLUTION/LPT_EXTENSION.rb",
-    "LPT_SOLUTION/icons/about_16.png",
-    "LPT_SOLUTION/icons/about_32.png",
-    "LPT_SOLUTION/icons/del_layer_16.png",
-    "LPT_SOLUTION/icons/del_layer_32.png",
-    "LPT_SOLUTION/icons/del_tedim_16.png",
-    "LPT_SOLUTION/icons/del_tedim_32.png",
-    "LPT_SOLUTION/icons/edge_delete_16.png",
-    "LPT_SOLUTION/icons/edge_delete_32.png",
-    "LPT_SOLUTION/icons/gc1m_16.png",
-    "LPT_SOLUTION/icons/gc1m_32.png",
-    "LPT_SOLUTION/icons/open_help_16.png",
-    "LPT_SOLUTION/icons/open_help_32.png",
+    "LPT_EXTENSION.rb",
+    "icons/about_16.png",
+    "icons/about_32.png",
+    "icons/del_layer_16.png",
+    "icons/del_layer_32.png",
+    "icons/del_tedim_16.png",
+    "icons/del_tedim_32.png",
+    "icons/edge_delete_16.png",
+    "icons/edge_delete_32.png",
+    "icons/gc1m_16.png",
+    "icons/gc1m_32.png",
+    "icons/open_help_16.png",
+    "icons/open_help_32.png",
     
     # Thêm tất cả các file khác của extension vào đây
     # Ví dụ: "subfolder/another_file.rb" nếu có
