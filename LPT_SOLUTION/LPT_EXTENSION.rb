@@ -11,14 +11,14 @@ VERSION = "2.0.0" # Cập nhật phiên bản này mỗi khi bạn có bản c�
 
 # Hàm kiểm tra và cập nhật extension
 def self.check_for_updates
-  github_raw_url_base = "https://raw.githubusercontent.com/PhuocTuan94/LPT_SOLUTION/refs/heads/main" # Thay đổi bằng username và repo của bạn
+  github_raw_url_base = "https://raw.githubusercontent.com/PhuocTuan94/LPT_SOLUTION/refs/heads/main"
   version_file_url = "#{github_raw_url_base}/VERSION.txt" # Một file đơn giản chỉ chứa số phiên bản mới nhất
 
   # Tải phiên bản mới nhất từ GitHub
   current_version = VERSION
   latest_version = nil
-
-  begin
+		
+ begin
     require 'open-uri'
     open(version_file_url) do |f|
       latest_version = f.read.strip
@@ -62,28 +62,34 @@ def self.update_extension(github_raw_url_base)
   ]
 
   model = Sketchup.active_model
+  puts "DEBUG: Đang chuẩn bị cập nhật, đóng model..."
   model.close_active
   sleep(0.5) # Chờ một chút để SketchUp đóng model hiện tại (giảm thiểu lỗi khi ghi đè file đang mở)
-
+  puts "DEBUG: Đã đóng model."
   begin
     extension_files.each do |file_name|
-      source_url = "#{github_raw_url_base}#{file_name}"
+      source_url = "#{github_raw_url_base}/#{file_name}"
       target_path = File.join(PLUGIN_DIR, file_name)
-
+        puts "DEBUG: Đang xử lý file: #{file_name}"
+      puts "DEBUG: Source URL: #{source_url}"
+      puts "DEBUG: Target Path: #{target_path}"
       # Đảm bảo thư mục đích tồn tại
       FileUtils.mkdir_p(File.dirname(target_path)) unless File.exist?(File.dirname(target_path))
-
+puts "DEBUG: Đã tạo thư mục đích nếu cần."
       puts "Tải xuống: #{source_url} tới #{target_path}"
       URI.open(source_url) do |source_file|
         File.open(target_path, "wb") do |target_file|
           target_file.write(source_file.read)
+          puts "DEBUG: Đã ghi nội dung file."
         end
       end
+      puts "DEBUG: Hoàn thành tải và ghi file: #{file_name}"
     end
     UI.messagebox("Cập nhật thành công! SketchUp sẽ khởi động lại để áp dụng các thay đổi.")
     Sketchup.send_action("quit:") # Khởi động lại SketchUp để tải lại extension
   rescue => e
     UI.messagebox("Có lỗi xảy ra trong quá trình cập nhật: #{e.message}\nBạn vui lòng thử lại hoặc cập nhật thủ công.")
+    puts "[LPT ERROR] Lỗi khi cập nhật: #{e.message}"
     puts e.backtrace.join("\n")
   end
 end
@@ -515,6 +521,7 @@ end
     # ✅ Tạo menu duy nhất 1 lần
     unless file_loaded?(__FILE__)
       self.create_template_file
+      self.check_for_updates
                 
                     # --- Menu ---
                     menu = UI.menu('Plugins').add_submenu('LPT_SOLUTION') 
