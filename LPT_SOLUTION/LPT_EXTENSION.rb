@@ -11,7 +11,7 @@ VERSION = "2.0.0" # Cập nhật phiên bản này mỗi khi bạn có bản c�
 
 # Hàm kiểm tra và cập nhật extension
 def self.check_for_updates
-  github_raw_url_base = "https://raw.githubusercontent.com/PhuocTuan94/LPT_SOLUTION/refs/heads/main"
+  github_raw_url_base = "https://raw.githubusercontent.com/PhuocTuan94/LPT_SOLUTION/main"
   version_file_url = "#{github_raw_url_base}/VERSION.txt" # Một file đơn giản chỉ chứa số phiên bản mới nhất
 
   # Tải phiên bản mới nhất từ GitHub
@@ -48,15 +48,21 @@ end
 # Hàm thực hiện cập nhật
 def self.update_extension(github_raw_url_base)
   extension_files = [
-    "lpt_solution.rb", # Tên file chính của extension
-    "icons/about_16.png",
-    "icons/about_32.png",
-    "icons/del_layer_16.png",
-    "icons/del_layer_32.png",
-    "icons/del_tedim_16.png",
-    "icons/del_tedim_32.png",
-    "icons/edge_delete_16.png",
-    "icons/edge_delete_32.png",
+    "LPT_SOLUTION.rb", # Tên file chính của extension
+    "LPT_SOLUTION/LPT_EXTENSION.rb"
+    "LPT_SOLUTION/icons/about_16.png",
+    "LPT_SOLUTION/icons/about_32.png",
+    "LPT_SOLUTION/icons/del_layer_16.png",
+    "LPT_SOLUTION/icons/del_layer_32.png",
+    "LPT_SOLUTION/icons/del_tedim_16.png",
+    "LPT_SOLUTION/icons/del_tedim_32.png",
+    "LPT_SOLUTION/icons/edge_delete_16.png",
+    "LPT_SOLUTION/icons/edge_delete_32.png",
+    "LPT_SOLUTION/icons/gc1m_16.png",
+    "LPT_SOLUTION/icons/gc1m_32.png",
+    "LPT_SOLUTION/icons/open_help_16.png",
+    "LPT_SOLUTION/icons/open_help_32.png",
+    
     # Thêm tất cả các file khác của extension vào đây
     # Ví dụ: "subfolder/another_file.rb" nếu có
   ]
