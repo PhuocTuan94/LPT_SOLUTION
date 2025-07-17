@@ -12,7 +12,7 @@ VERSION = "2.0.0" # Cập nhật phiên bản này mỗi khi bạn có bản c�
 # Hàm kiểm tra và cập nhật extension
 def self.check_for_updates
   github_raw_url_base = "https://raw.githubusercontent.com/PhuocTuan94/LPT_SOLUTION/refs/heads/main" # Thay đổi bằng username và repo của bạn
-  version_file_url = "#{github_raw_url_base}VERSION.txt" # Một file đơn giản chỉ chứa số phiên bản mới nhất
+  version_file_url = "#{github_raw_url_base}/VERSION.txt" # Một file đơn giản chỉ chứa số phiên bản mới nhất
 
   # Tải phiên bản mới nhất từ GitHub
   current_version = VERSION
