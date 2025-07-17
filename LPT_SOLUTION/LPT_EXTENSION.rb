@@ -49,7 +49,7 @@ end
 def self.update_extension(github_raw_url_base)
   extension_files = [
     "LPT_SOLUTION.rb", # Tên file chính của extension
-    "LPT_SOLUTION/LPT_EXTENSION.rb"
+    "LPT_SOLUTION/LPT_EXTENSION.rb",
     "LPT_SOLUTION/icons/about_16.png",
     "LPT_SOLUTION/icons/about_32.png",
     "LPT_SOLUTION/icons/del_layer_16.png",
