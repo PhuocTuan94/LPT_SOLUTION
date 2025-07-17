@@ -18,38 +18,43 @@ def self.check_for_updates
   current_version = VERSION
   latest_version = nil
 		
- begin
+  begin
     require 'open-uri'
     open(version_file_url) do |f|
       latest_version = f.read.strip
     end
+  rescue OpenURI::HTTPError => e # Thêm loại lỗi cụ thể để bắt lỗi HTTP rõ hơn
+    #puts "[LPT_SOLUTION]-Không thể kiểm tra cập nhật. Lỗi HTTP: #{e.message} (Code: #{e.io.status.first})"
+    return
   rescue => e
-    UI.messagebox("Không thể kiểm tra cập nhật. Lỗi: #{e.message}")
+    #puts "[LPT_SOLUTION]-Không thể kiểm tra cập nhật. Lỗi: #{e.message}"
     return
   end
 
-  if latest_version.nil?
-    UI.messagebox("Không thể lấy thông tin phiên bản mới nhất từ GitHub.")
+  if latest_version.nil? || latest_version.empty? # Kiểm tra cả rỗng
+    #puts "[LPT_SOLUTION] - Không thể lấy thông tin phiên bản mới nhất!."
     return
   end
 
+  # So sánh phiên bản
   if Gem::Version.new(latest_version) > Gem::Version.new(current_version)
-    result = UI.messagebox("Có phiên bản mới (#{latest_version})! Bạn có muốn cập nhật không?", MB_YESNO)
+    result = UI.messagebox("[LPT_SOLUTION] - Có phiên bản mới (#{latest_version})! Tắt mở lại SketchUp để cập nhật!", MB_YESNO)
     if result == IDYES
       update_extension(github_raw_url_base)
     else
-      UI.messagebox("Đã hủy cập nhật.")
+      #puts "[LPT_SOLUTION] - Người dùng đã hủy cập nhật."
     end
   else
-    UI.messagebox("Bạn đang sử dụng phiên bản mới nhất (#{current_version}).")
+    #puts "[LPT_SOLUTION] - Bạn đang sử dụng phiên bản mới nhất (#{current_version})."
   end
 end
+
 
 # Hàm thực hiện cập nhật
 def self.update_extension(github_raw_url_base)
   extension_files = [
     
-    "LPT_EXTENSION.rb",# File này ở thư mục gốc của repo
+    "LPT_EXTENSION.rb",# File này ở thư mục gốc của repo,
     "icons/about_16.png",
     "icons/about_32.png",
     "icons/del_layer_16.png",
@@ -68,55 +73,43 @@ def self.update_extension(github_raw_url_base)
   ]
 
   model = Sketchup.active_model
-  puts "DEBUG: Đang chuẩn bị cập nhật, đóng model..."
+  #puts "DEBUG: Đang chuẩn bị cập nhật, đóng model..."
   model.close_active
-  sleep(0.5) # Chờ một chút để SketchUp đóng model hiện tại (giảm thiểu lỗi khi ghi đè file đang mở)
-  puts "DEBUG: Đã đóng model."
+  sleep(1) # Giảm thời gian chờ
+  #puts "DEBUG: Đã đóng model."
+
   begin
     extension_files.each do |file_name|
       source_url = "#{github_raw_url_base}/#{file_name}"
       target_path = File.join(PLUGIN_DIR, file_name)
-        puts "DEBUG: Đang xử lý file: #{file_name}"
-      puts "DEBUG: Source URL: #{source_url}"
-      puts "DEBUG: Target Path: #{target_path}"
+      
+      #puts "DEBUG: Đang xử lý file: #{file_name}"
+      #puts "DEBUG: Source URL: #{source_url}"
+      #puts "DEBUG: Target Path: #{target_path}"
+
       # Đảm bảo thư mục đích tồn tại
       FileUtils.mkdir_p(File.dirname(target_path)) unless File.exist?(File.dirname(target_path))
-puts "DEBUG: Đã tạo thư mục đích nếu cần."
-      puts "Tải xuống: #{source_url} tới #{target_path}"
+      #puts "DEBUG: Đã tạo thư mục đích nếu cần."
+      
+      # puts "DEBUG: Tải xuống: #{source_url} tới #{target_path}" # Có thể bật nếu muốn xem chi tiết hơn
       URI.open(source_url) do |source_file|
         File.open(target_path, "wb") do |target_file|
           target_file.write(source_file.read)
-          puts "DEBUG: Đã ghi nội dung file."
+          #puts "DEBUG: Đã ghi nội dung file: #{file_name}."
         end
       end
-      puts "DEBUG: Hoàn thành tải và ghi file: #{file_name}"
+      #puts "DEBUG: Hoàn thành tải và ghi file: #{file_name}"
     end
-    UI.messagebox("Cập nhật thành công! SketchUp sẽ khởi động lại để áp dụng các thay đổi.")
+    #puts "[LPT_SOLUTION]-Cập nhật thành công! SketchUp sẽ khởi động lại để áp dụng các thay đổi."
     Sketchup.send_action("quit:") # Khởi động lại SketchUp để tải lại extension
+  rescue OpenURI::HTTPError => e # Bắt lỗi HTTP cụ thể
+    #puts "[LPT_SOLUTION]-Lỗi cập nhật HTTP: #{e.message} (Code: #{e.io.status.first})\nBạn vui lòng thử lại sau!"
+    #puts e.backtrace.join("\n")
   rescue => e
-    UI.messagebox("Có lỗi xảy ra trong quá trình cập nhật: #{e.message}\nBạn vui lòng thử lại hoặc cập nhật thủ công.")
-    puts "[LPT ERROR] Lỗi khi cập nhật: #{e.message}"
-    puts e.backtrace.join("\n")
+    #puts "[LPT_SOLUTION]-Lỗi cập nhật: #{e.message}\nBạn vui lòng thử lại sau!"
+    #puts e.backtrace.join("\n")
   end
 end
-
-# --- Thêm mục Cập nhật vào menu và toolbar ---
-# Bạn cần thêm các dòng này vào phần tạo menu/toolbar của bạn
-
-# Trong phần menu:
-# menu.add_item("Kiểm tra cập nhật") { self.check_for_updates }
-
-# Trong phần toolbar (ví dụ):
-# cmd_update = UI::Command.new('Kiểm tra cập nhật') {
-#   self.check_for_updates
-# }
-# cmd_update.tooltip = 'Kiểm tra và cập nhật Extension'
-# cmd_update.status_bar_text = 'Kiểm tra và cập nhật Extension từ GitHub'
-# # Bạn có thể tạo icon cho nút cập nhật nếu muốn
-# # cmd_update.small_icon = File.join(PLUGIN_DIR, "icons", "update_16.png")
-# # cmd_update.large_icon = File.join(PLUGIN_DIR, "icons", "update_32.png")
-# toolbar.add_item(cmd_update)
-            
 #CHECK VERSION#
 
 
